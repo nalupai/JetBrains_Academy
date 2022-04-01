@@ -4,26 +4,38 @@ public class SimpleTicTacToe {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        String game = scanner.next();
+        String game = "_________";
 
         showingTheGame(game);
-
-        System.out.println(analyzingTheGame(game));
         
         String n = "";
         String m = "";
 
         boolean playing = false;
+
+        int move;
+
+        for (move = 1; move < 10;) {
         
-        while (playing == false) {
-            System.out.println("Enter coordinates:");
-            n = scanner.next();
-            m = scanner.next();
-            playing = doWePlay(n, m, game);
+            while (playing == false) {
+                System.out.println("Enter coordinates:");
+                n = scanner.next();
+                m = scanner.next();
+                playing = doWePlay(n, m, game);
+            }
+        
+            game = implementationIntoTheGame(n, m, game, move);
+            showingTheGame(game);
+
+            if (analyzingTheGame(game) == "X wins" || analyzingTheGame(game) == "O wins" || analyzingTheGame(game) == "Draw") {
+                break;
+            }
+
+            move++;
+            playing = false;
         }
-        
-        game = implementationIntoTheGame(n, m, game);
-        showingTheGame(game);
+
+        System.out.println(analyzingTheGame(game));
     }
 
     static void showingTheGame(String game) {
@@ -93,30 +105,54 @@ public class SimpleTicTacToe {
         }
     }
 
-    static String implementationIntoTheGame(String n, String m, String game) {
+    static String implementationIntoTheGame(String n, String m, String game, int move) {
 
         String newSequence = "";
 
-        if (n.equals("1") && m.equals("1") && game.charAt(0) == '_') {
-            newSequence = "X" + game.substring(1,9);
-        } else if (n.equals("1") && m.equals("2") && game.charAt(1) == '_') {
-            newSequence = game.substring(0,1) + "X" + game.substring(2,9);
-        } else if (n.equals("1") && m.equals("3") && game.charAt(2) == '_') {
-            newSequence = game.substring(0,2) + "X" + game.substring(3,9);
-        } else if (n.equals("2") && m.equals("1") && game.charAt(3) == '_') {
-            newSequence = game.substring(0,3) + "X" + game.substring(4,9);
-        } else if (n.equals("2") && m.equals("2") && game.charAt(4) == '_') {
-            newSequence = game.substring(0,4) + "X" + game.substring(5,9);
-        } else if (n.equals("2") && m.equals("3") && game.charAt(5) == '_') {
-            newSequence = game.substring(0,5) + "X" + game.substring(6,9);
-        } else if (n.equals("3") && m.equals("1") && game.charAt(6) == '_') {
-            newSequence = game.substring(0,6) + "X" + game.substring(7,9);
-        } else if (n.equals("3") && m.equals("2") && game.charAt(7) == '_') {
-            newSequence = game.substring(0,7) + "X" + game.substring(8,9);
-        } else if (n.equals("3") && m.equals("3") && game.charAt(8) == '_') {
-            newSequence = game.substring(0,8) + "X";
+        if (move % 2 != 0) {
+            if (n.equals("1") && m.equals("1") && game.charAt(0) == '_') {
+                newSequence = "X" + game.substring(1,9);
+            } else if (n.equals("1") && m.equals("2") && game.charAt(1) == '_') {
+                newSequence = game.substring(0,1) + "X" + game.substring(2,9);
+            } else if (n.equals("1") && m.equals("3") && game.charAt(2) == '_') {
+                newSequence = game.substring(0,2) + "X" + game.substring(3,9);
+            } else if (n.equals("2") && m.equals("1") && game.charAt(3) == '_') {
+                newSequence = game.substring(0,3) + "X" + game.substring(4,9);
+            } else if (n.equals("2") && m.equals("2") && game.charAt(4) == '_') {
+                newSequence = game.substring(0,4) + "X" + game.substring(5,9);
+            } else if (n.equals("2") && m.equals("3") && game.charAt(5) == '_') {
+                newSequence = game.substring(0,5) + "X" + game.substring(6,9);
+            } else if (n.equals("3") && m.equals("1") && game.charAt(6) == '_') {
+                newSequence = game.substring(0,6) + "X" + game.substring(7,9);
+            } else if (n.equals("3") && m.equals("2") && game.charAt(7) == '_') {
+                newSequence = game.substring(0,7) + "X" + game.substring(8,9);
+            } else if (n.equals("3") && m.equals("3") && game.charAt(8) == '_') {
+                newSequence = game.substring(0,8) + "X";
+            } else {
+                newSequence = game;
+            }
         } else {
-            newSequence = game;
+            if (n.equals("1") && m.equals("1") && game.charAt(0) == '_') {
+                newSequence = "O" + game.substring(1,9);
+            } else if (n.equals("1") && m.equals("2") && game.charAt(1) == '_') {
+                newSequence = game.substring(0,1) + "O" + game.substring(2,9);
+            } else if (n.equals("1") && m.equals("3") && game.charAt(2) == '_') {
+                newSequence = game.substring(0,2) + "O" + game.substring(3,9);
+            } else if (n.equals("2") && m.equals("1") && game.charAt(3) == '_') {
+                newSequence = game.substring(0,3) + "O" + game.substring(4,9);
+            } else if (n.equals("2") && m.equals("2") && game.charAt(4) == '_') {
+                newSequence = game.substring(0,4) + "O" + game.substring(5,9);
+            } else if (n.equals("2") && m.equals("3") && game.charAt(5) == '_') {
+                newSequence = game.substring(0,5) + "O" + game.substring(6,9);
+            } else if (n.equals("3") && m.equals("1") && game.charAt(6) == '_') {
+                newSequence = game.substring(0,6) + "O" + game.substring(7,9);
+            } else if (n.equals("3") && m.equals("2") && game.charAt(7) == '_') {
+                newSequence = game.substring(0,7) + "O" + game.substring(8,9);
+            } else if (n.equals("3") && m.equals("3") && game.charAt(8) == '_') {
+                newSequence = game.substring(0,8) + "O";
+            } else {
+                newSequence = game;
+            }
         }
         
         return newSequence;    
