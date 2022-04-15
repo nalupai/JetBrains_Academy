@@ -10,20 +10,30 @@ public class CoffeeMachine {
         int basicCups = 9;
         int basicMoney = 550;
 
-        int requiredWaterForEspresso = 250;
-        int requiredMilkForEspresso = 0;
-        int requiredBeansForEspresso = 16;
-        int requiredMoneyForEspresso = 4;
+        int[] machineContents = {basicWater, basicMilk, basicBeans, basicCups, basicMoney};
+
+        int cup = 1;
+
+        int waterEspresso = 250;
+        int milkEspresso = 0;
+        int beansEspresso = 16;
+        int moneyEspresso = 4;
+
+        int[] espresso = {waterEspresso, milkEspresso, beansEspresso, cup, moneyEspresso};
         
-        int requiredWaterForLatte = 350;
-        int requiredMilkForLatte = 75;
-        int requiredBeansForLatte = 20;
-        int requiredMoneyForLatte = 7;
+        int waterLatte = 350;
+        int milkLatte = 75;
+        int beansLatte = 20;
+        int moneyLatte = 7;
+
+        int[] latte = {waterLatte, milkLatte, beansLatte, cup, moneyLatte};
         
-        int requiredWaterForCappuccino = 200;
-        int requiredMilkForCappuccino = 100;
-        int requiredBeansForCappuccino = 12;
-        int requiredMoneyForCappuccino = 6;
+        int waterCappuccino = 200;
+        int milkCappuccino = 100;
+        int beansCappuccino = 12;
+        int moneyCappuccino = 6;
+
+        int[] cappuccino = {waterCappuccino, milkCappuccino, beansCappuccino, cup, moneyCappuccino};
 
         int add = 0;
 
@@ -34,77 +44,17 @@ public class CoffeeMachine {
             String action = scanner.next();
             switch (action) {
                 case "buy":
-                    System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
+                    System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:");
                     String option = scanner.next();
                     switch (option) {
                         case "1":
-                            if (requiredWaterForEspresso <= basicWater && requiredMilkForEspresso <= basicMilk && requiredBeansForEspresso <= basicBeans && basicCups > 0) {
-                                System.out.println("I have enough resources, making you a coffee!");
-                                basicWater -= requiredWaterForEspresso;
-                                basicMilk -= requiredMilkForEspresso;
-                                basicBeans -= requiredBeansForEspresso;
-                                basicCups -= 1;
-                                basicMoney += requiredMoneyForEspresso;
-                            } else {
-                                if (requiredWaterForEspresso < basicWater) {
-                                    System.out.println("Sorry, not enough water!");
-                                }
-                                if (requiredMilkForEspresso < basicMilk) {
-                                    System.out.println("Sorry, not enough milk!");
-                                }
-                                if (requiredBeansForEspresso < basicBeans) {
-                                    System.out.println("Sorry, not enough beans!");
-                                }
-                                if (basicCups < 1) {
-                                    System.out.println("Sorry, not enough cups!");
-                                }
-                            }
+                            machineContents = buy(machineContents, espresso);
                             break;
                         case "2":
-                            if (requiredWaterForLatte <= basicWater && requiredMilkForLatte <= basicMilk && requiredBeansForLatte <= basicBeans && basicCups > 0) {
-                                System.out.println("I have enough resources, making you a coffee!");
-                                basicWater -= requiredWaterForLatte;
-                                basicMilk -= requiredMilkForLatte;
-                                basicBeans -= requiredBeansForLatte;
-                                basicCups -= 1;
-                                basicMoney += requiredMoneyForLatte;
-                            } else {
-                                if (requiredWaterForLatte < basicWater) {
-                                    System.out.println("Sorry, not enough water!");
-                                }
-                                if (requiredMilkForLatte < basicMilk) {
-                                    System.out.println("Sorry, not enough milk!");
-                                }
-                                if (requiredBeansForLatte < basicBeans) {
-                                    System.out.println("Sorry, not enough beans!");
-                                }
-                                if (basicCups < 1) {
-                                    System.out.println("Sorry, not enough cups!");
-                                }
-                            }
+                            machineContents = buy(machineContents, latte);
                             break;
                         case "3":
-                            if (requiredWaterForCappuccino <= basicWater && requiredMilkForCappuccino <= basicMilk && requiredBeansForCappuccino <= basicBeans && basicCups > 0) {
-                                System.out.println("I have enough resources, making you a coffee!");
-                                basicWater -= requiredWaterForCappuccino;
-                                basicMilk -= requiredMilkForCappuccino;
-                                basicBeans -= requiredBeansForCappuccino;
-                                basicCups -= 1;
-                                basicMoney += requiredMoneyForCappuccino;
-                            } else {
-                                if (requiredWaterForCappuccino < basicWater) {
-                                    System.out.println("Sorry, not enough water!");
-                                }
-                                if (requiredMilkForCappuccino < basicMilk) {
-                                    System.out.println("Sorry, not enough milk!");
-                                }
-                                if (requiredBeansForCappuccino < basicBeans) {
-                                    System.out.println("Sorry, not enough beans!");
-                                }
-                                if (basicCups < 1) {
-                                    System.out.println("Sorry, not enough cups!");
-                                }
-                            }
+                            machineContents = buy(machineContents, cappuccino);
                             break;
                         case "back":
                             break;
@@ -114,30 +64,25 @@ public class CoffeeMachine {
                 case "fill":
                     System.out.println("Write how many ml of water do you want to add:");
                     add = scanner.nextInt();
-                    basicWater += add;
+                    machineContents[0] += add;
                     System.out.println("Write how many ml of milk do you want to add:");
                     add = scanner.nextInt();
-                    basicMilk += add;
+                    machineContents[1] += add;
                     System.out.println("Write how many grams of coffee beans do you want to add:"); 
                     add = scanner.nextInt();
-                    basicBeans += add;
+                    machineContents[2] += add;
                     System.out.println("Write how many disposable cups of coffee do you want to add:");
                     add = scanner.nextInt();
-                    basicCups += add;
+                    machineContents[3] += add;
                     break;
                 
                 case "take":
-                    System.out.println("I gave you $" + basicMoney);
-                    basicMoney = 0;
+                    System.out.println("I gave you $" + machineContents[4]);
+                    machineContents[4] = 0;
                     break;
 
                 case "remaining":
-                    System.out.println("The coffee machine has:");
-                    System.out.println(basicWater + " of water");
-                    System.out.println(basicMilk + " of milk");
-                    System.out.println(basicBeans + " of coffee beans");
-                    System.out.println(basicCups + " of disposable cups");
-                    System.out.println(basicMoney + " of money");
+                    show(machineContents);
                     break;
 
                 case "exit":
@@ -145,5 +90,50 @@ public class CoffeeMachine {
                     break;
             }
         }
+    }
+
+    public static int[] buy(int[] machineContents, int[] coffee) {
+
+        int[] newMachineContents = new int[5];
+
+        for (int i = 0; i < 4; i++) {
+            if (machineContents[i] < coffee[i]) {
+                if ( i == 1) {
+                    System.out.println("Sorry, not enough water!");
+                }
+                if ( i == 2) {
+                    System.out.println("Sorry, not enough milk!");
+                }
+                if ( i == 3) {
+                    System.out.println("Sorry, not enough beans!");
+                }
+                if ( i == 4) {
+                    System.out.println("Sorry, not enough cups!");
+                }
+                return machineContents;
+            }
+        }
+
+        System.out.println("I have enough resources, making you a coffee!");
+
+        for (int i = 0; i < 5; i++) {
+            if (i == 4) {
+                newMachineContents[i] = machineContents[i] + coffee[i];
+            } else {
+                newMachineContents[i] = machineContents[i] - coffee[i];
+            }
+        }
+
+        return newMachineContents;
+    }
+
+    public static void show(int[] machineContents) {
+
+        System.out.println("The coffee machine has:");
+        System.out.println(machineContents[0] + " ml of water");
+        System.out.println(machineContents[1] + " ml of milk");
+        System.out.println(machineContents[2] + " g of coffee beans");
+        System.out.println(machineContents[3] + " disposable cups");
+        System.out.println("$" + machineContents[4] + " of money");
     }
 }
