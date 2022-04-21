@@ -13,28 +13,37 @@ public class CinemaRoomManager {
         int cinemaRoomWidth = scanner.nextInt();
 
         char[][] cinemaRoom = new char[cinemaRoomHeight][cinemaRoomWidth];
-
-        //System.out.println("Total income:\n$" + totalIncome(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth));
-
         prepareRoom(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth);
 
-        System.out.println("Cinema:");
+        boolean run = true;
 
-        showRoom(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth);
+        while(run) {
 
-        System.out.println("Enter a row number:");
-        int rowNumber = scanner.nextInt();
+            System.out.println("""
+                1. Show the seats
+                2. Buy a ticket
+                0. Exit""");
 
-        System.out.println("Enter a seat number in that row:");
-        int seatNumber = scanner.nextInt();
-
-        System.out.println("Ticket price: $" + ticketPrice(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth, rowNumber));
-
-        cinemaRoom = reservation(cinemaRoom, rowNumber, seatNumber);
-
-        System.out.println("Cinema:");
-
-        showRoom(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth);
+            String action = scanner.next();
+    
+            switch (action) {
+                case "1":
+                    System.out.println("Cinema:");
+                    showRoom(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth);
+                    break;
+                case "2":
+                    System.out.println("Enter a row number:");
+                    int rowNumber = scanner.nextInt();
+                    System.out.println("Enter a seat number in that row:");
+                    int seatNumber = scanner.nextInt();
+                    System.out.println("Ticket price: $" + ticketPrice(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth, rowNumber));
+                    cinemaRoom = reservation(cinemaRoom, rowNumber, seatNumber);
+                    break;
+                case "0":
+                    run = false; 
+                    break;
+            }
+        }
     }
 
     public static char[][] reservation(char[][] room, int row, int seat) {
@@ -71,7 +80,6 @@ public class CinemaRoomManager {
 
     public static void showRoom(char[][] room, int height, int width) {
         
-        //System.out.println("  1 2 3 4 5 6 7 8");
         String label = " ";
 
         for (int i = 1; i <= width; i++) {
