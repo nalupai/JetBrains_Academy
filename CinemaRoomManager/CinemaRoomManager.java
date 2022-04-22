@@ -15,6 +15,10 @@ public class CinemaRoomManager {
         char[][] cinemaRoom = new char[cinemaRoomHeight][cinemaRoomWidth];
         prepareRoom(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth);
 
+        int purchasedTickets = 0;
+        float percentage = 0.00f;
+        int currentIncome = 0;
+
         boolean run = true;
 
         while(run) {
@@ -22,6 +26,7 @@ public class CinemaRoomManager {
             System.out.println("""
                 1. Show the seats
                 2. Buy a ticket
+                3. Statistics
                 0. Exit""");
 
             String action = scanner.next();
@@ -32,16 +37,48 @@ public class CinemaRoomManager {
                     showRoom(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth);
                     break;
                 case "2":
-                    System.out.println("Enter a row number:");
-                    int rowNumber = scanner.nextInt();
-                    System.out.println("Enter a seat number in that row:");
-                    int seatNumber = scanner.nextInt();
-                    System.out.println("Ticket price: $" + ticketPrice(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth, rowNumber));
-                    cinemaRoom = reservation(cinemaRoom, rowNumber, seatNumber);
+                    run = false;
+                    while(!run) {
+                        System.out.println("Enter a row number:");
+                        int rowNumber = scanner.nextInt();
+                        System.out.println("Enter a seat number in that row:");
+                        int seatNumber = scanner.nextInt();
+                        if (checkAvailability(cinemaRoom, rowNumber, seatNumber)) {
+                            System.out.println("Ticket price: $" + ticketPrice(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth, rowNumber));
+                            cinemaRoom = reservation(cinemaRoom, rowNumber, seatNumber);
+                            purchasedTickets++;
+                            currentIncome = currentIncome + ticketPrice(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth, rowNumber);
+                            run = true;
+                        } else {
+                            System.out.println("That ticket has already been purchased!");
+                            run = false;
+                        }
+                    }
+                    break;
+                case "3":
+                    System.out.println("Number of purchased tickets: " + purchasedTickets);
+                    percentage = purchasedTickets * 100f / (cinemaRoomHeight * cinemaRoomWidth);
+                    System.out.printf("Percentage: %.2f%%\n", percentage);
+                    System.out.println("Current income: $" + currentIncome);
+                    System.out.println("Total income: $" + totalIncome(cinemaRoom, cinemaRoomHeight, cinemaRoomWidth));
                     break;
                 case "0":
                     run = false; 
                     break;
+            }
+        }
+    }
+
+    public static boolean checkAvailability(char[][] room, int row, int seat) {
+
+        if (row > 9 || seat > 9) {
+            System.out.println("Wrong input!");
+            return false;
+        } else {
+            if (room[row-1][seat-1] == 'B') {
+                return false;
+            } else {
+                return true;
             }
         }
     }
