@@ -58,6 +58,75 @@ public class Battleship {
 
             i++;
         }
+
+        char[][] game = new char[10][10];
+        prepareBoard(game);
+
+        System.out.println("The game starts!");
+        showBoard(game);
+        System.out.println("Take a shot!");
+
+        int[] fieldCoordinates = new int[2];
+        boolean run = true;
+
+        while(run) {
+
+            String field = scanner.nextLine();
+
+            fieldCoordinates = convertField(field);
+
+            if (fieldCoordinates[0] >= 0 && fieldCoordinates[0] <= 9 && fieldCoordinates[1] >= 0 && fieldCoordinates[1] <= 9) {
+                
+                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'O') {
+                    game[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
+                    board[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
+                    showBoard(game);
+                    System.out.println("You hit a ship!");
+                    showBoard(board);
+                }
+
+                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == '~') {
+                    game[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
+                    board[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
+                    showBoard(game);
+                    System.out.println("You missed!");
+                    showBoard(board);
+                }
+
+                run = false;
+
+            } else {
+
+                System.out.println("Error! You entered the wrong coordinates! Try again:");
+                continue;
+            }
+        }
+    }
+
+    public static int[] convertField(String field) {
+
+        int[] coordinates = {10, 10};
+
+        switch(field.charAt(0)) {
+            case 'A': coordinates[0] = 0; break;
+            case 'B': coordinates[0] = 1; break;
+            case 'C': coordinates[0] = 2; break;
+            case 'D': coordinates[0] = 3; break;
+            case 'E': coordinates[0] = 4; break;
+            case 'F': coordinates[0] = 5; break;
+            case 'G': coordinates[0] = 6; break;
+            case 'H': coordinates[0] = 7; break;
+            case 'I': coordinates[0] = 8; break;
+            case 'J': coordinates[0] = 9; break;
+        }
+        
+        if (field.length() == 2){
+            coordinates[1] =  Character.getNumericValue(field.charAt(1)-1);
+        } else if (field.length() == 3 && field.charAt(1) == '1' && field.charAt(2) == '0'){
+            coordinates[1] = 9;
+        }
+
+        return coordinates;
     }
 
     public static char[][] addCollision(char[][] board) {
