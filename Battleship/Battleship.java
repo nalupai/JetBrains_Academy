@@ -72,7 +72,6 @@ public class Battleship {
         while(run) {
 
             String field = scanner.nextLine();
-
             fieldCoordinates = convertField(field);
 
             if (fieldCoordinates[0] >= 0 && fieldCoordinates[0] <= 9 && fieldCoordinates[1] >= 0 && fieldCoordinates[1] <= 9) {
@@ -96,11 +95,45 @@ public class Battleship {
                 run = false;
 
             } else {
-
+                
                 System.out.println("Error! You entered the wrong coordinates! Try again:");
                 continue;
             }
         }
+
+        /*Stage 2 - The first shot
+        System.out.println("The game starts!");
+        showBoard(board);
+        System.out.println("Take a shot!");
+        int[] fieldCoordinates = new int[2];
+
+        boolean run = true;
+
+        while(run) {
+            String field = scanner.nextLine();
+            fieldCoordinates = konwertujKomorke(field);
+
+            if (fieldCoordinates[0] >= 0 && fieldCoordinates[0] <= 9 && fieldCoordinates[1] >= 0 && fieldCoordinates[1] <= 9) {
+                
+                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'O') {
+                    board[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
+                    showBoard(board);
+                    System.out.println("You hit a ship!");
+                }
+
+                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == '~') {
+                    board[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
+                    showBoard(board);
+                    System.out.println("You missed!");
+                }
+
+                run = false;
+
+            } else {
+                System.out.println("Error! You entered the wrong coordinates! Try again:");
+                continue;
+            }
+        }*/
     }
 
     public static int[] convertField(String field) {
