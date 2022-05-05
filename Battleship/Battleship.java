@@ -67,21 +67,36 @@ public class Battleship {
         System.out.println("Take a shot!");
 
         int[] fieldCoordinates = new int[2];
-        boolean run = true;
+        int availableShips = 5;
 
-        while(run) {
+        while(availableShips > 0) {
 
             String field = scanner.nextLine();
             fieldCoordinates = convertField(field);
 
             if (fieldCoordinates[0] >= 0 && fieldCoordinates[0] <= 9 && fieldCoordinates[1] >= 0 && fieldCoordinates[1] <= 9) {
                 
+                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'X') {
+                    System.out.println("You hit a ship!");
+                    showBoard(game);
+                }
+
+                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'M') {
+                    System.out.println("You missed!");
+                    showBoard(game);
+                }
+                
                 if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'O') {
                     game[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
                     board[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
                     showBoard(game);
-                    System.out.println("You hit a ship!");
-                    showBoard(board);
+                    
+                    if (shot(board, fieldCoordinates)) {
+                        System.out.println("You hit a ship! Try again:");
+                    } else { 
+                        System.out.println("You sank a ship! Specify a new target:");
+                        availableShips--;
+                    }
                 }
 
                 if (board[fieldCoordinates[0]][fieldCoordinates[1]] == '~') {
@@ -91,49 +106,74 @@ public class Battleship {
                     System.out.println("You missed!");
                     showBoard(board);
                 }
-
-                run = false;
-
+                
             } else {
                 
                 System.out.println("Error! You entered the wrong coordinates! Try again:");
                 continue;
             }
         }
+        System.out.println("You sank the last ship. You won. Congratulations!");
+    }
 
-        /*Stage 2 - The first shot
-        System.out.println("The game starts!");
-        showBoard(board);
-        System.out.println("Take a shot!");
-        int[] fieldCoordinates = new int[2];
+    public static boolean shot(char[][] board, int[] coordinates) {
 
-        boolean run = true;
+        int k; 
+        int m;
+        int i = coordinates[0];
+        int j = coordinates[1];
 
-        while(run) {
-            String field = scanner.nextLine();
-            fieldCoordinates = konwertujKomorke(field);
-
-            if (fieldCoordinates[0] >= 0 && fieldCoordinates[0] <= 9 && fieldCoordinates[1] >= 0 && fieldCoordinates[1] <= 9) {
-                
-                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'O') {
-                    board[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
-                    showBoard(board);
-                    System.out.println("You hit a ship!");
-                }
-
-                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == '~') {
-                    board[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
-                    showBoard(board);
-                    System.out.println("You missed!");
-                }
-
-                run = false;
-
-            } else {
-                System.out.println("Error! You entered the wrong coordinates! Try again:");
-                continue;
+        if (coordinates[1] == 0 && (coordinates[0] > 0 && coordinates[0] < 9)){
+            if (board[i][j] == 'O' || board[i-1][j] == 'O' || board[i-1][j+1] == 'O' || board[i][j+1] == 'O' || board[i+1][j+1] == 'O' || board[i+1][j] == 'O'){
+                return true;
             }
-        }*/
+
+        } else if (coordinates[0] == 0 && (coordinates[1] > 0 && coordinates[1] < 9)){
+            if (board[i][j] == 'O' || board[i][j-1] == 'O' || board[i+1][j-1] == 'O' || board[i+1][j] == 'O' || board[i+1][j+1] == 'O' || board[i][j+1] == 'O'){
+                return true;
+            }
+
+        } else if (coordinates[1] == 9 && (coordinates[0] > 0 && coordinates[0] < 9)){
+            if (board[i][j] == 'O' || board[i-1][j] == 'O' || board[i-1][j-1] == 'O' || board[i][j-1] == 'O' || board[i+1][j-1] == 'O' || board[i+1][j] == 'O'){
+                return true;
+            }
+
+        } else if (coordinates[0] == 9 && (coordinates[1] > 0 && coordinates[1] < 9)){
+            if (board[i][j] == 'O' || board[i][j-1] == 'O' || board[i-1][j-1] == 'O' || board[i-1][j] == 'O' || board[i-1][j+1] == 'O' || board[i][j+1] == 'O'){
+                return true;
+            }
+
+        } else if (coordinates[0] == 0 && coordinates[1] == 0){
+            if (board[i][j+1] == 'O' || board[i+1][j+1] == 'O' || board[i+1][j] == 'O'){
+                return true;
+            }
+
+        } else if (coordinates[0] == 0 && coordinates[1] == 9){
+            if (board[i][j-1] == 'O' || board[i+1][j-1] == 'O' || board[i+1][j] == 'O'){
+                return true;
+            }
+
+        } else if (coordinates[0] == 9 && coordinates[1] == 9){
+            if (board[i-1][j] == 'O' || board[i-1][j-1] == 'O' || board[i-1][j] == 'O'){
+                return true;
+            }
+
+        } else if (coordinates[0] == 9 && coordinates[1] == 0){
+            if (board[i-1][j] == 'O' || board[i-1][j+1] == 'O' || board[i][j+1] == 'O'){
+                return true;
+            }
+
+        } else {
+            for (k = 1; k < 9; k++){
+                for (m = 1; m < 9; m++){
+                    if (board[i][j] == 'O' || board[i-1][j] == 'O' || board[i+1][j] == 'O' || board[i][j-1] == 'O' || board[i][j+1] == 'O' || board[i-1][j-1] == 'O' 
+                        || board[i+1][j-1] == 'O' || board[i-1][j+1] == 'O' || board[i+1][j+1] == 'O'){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public static int[] convertField(String field) {
