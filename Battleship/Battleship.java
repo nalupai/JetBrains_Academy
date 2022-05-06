@@ -8,12 +8,20 @@ public class Battleship {
 
         char[][] board = new char[10][10];
         char[][] collisionBoard = new char[10][10];
+
+        char[][] board2 = new char[10][10];
+        char[][] collisionBoard2 = new char[10][10];
+
         int[] coordinatesTable = new int[4];
         String[] shipNames = {"Aircraft Carrier", "Battleship", "Submarine", "Cruiser", "Destroyer"};
         int[] shipLengths = {5, 4, 3, 3, 2};
 
         prepareBoard(board);
+        prepareBoard(board2);
         prepareBoard(collisionBoard);
+        prepareBoard(collisionBoard2);
+
+        System.out.println("Player 1, place your ships on the game field");
         showBoard(board);
         
         for (int i = 0; i < shipNames.length;) {
@@ -59,61 +67,216 @@ public class Battleship {
             i++;
         }
 
-        char[][] game = new char[10][10];
-        prepareBoard(game);
+        pressEnter();
 
-        System.out.println("The game starts!");
-        showBoard(game);
-        System.out.println("Take a shot!");
+        System.out.println("Player 2, place your ships to the game field");
+        showBoard(board2);
+
+        for (int i = 0; i < shipNames.length;) {
+            
+            System.out.println("Enter the coordinates of the " + shipNames[i] + " (" + shipLengths[i] + " cells):");
+            String coordinates = scanner.nextLine();
+
+            int coordinatesCase = whichCase(coordinates);
+
+            if (coordinatesCase == 1) {
+                coordinatesTable = convertFirstCase(coordinates);
+            } else if (coordinatesCase == 2) {
+                coordinatesTable = convertSecondCase(coordinates);
+            } else if (coordinatesCase == 3) {
+                coordinatesTable = convertThirdCase(coordinates);
+            } 
+
+            coordinatesTable = sequenceChange(coordinatesTable);
+
+            if (!checkingCoordinatesScope(coordinatesTable)) {
+                System.out.println("Error! Wrong ship location! Try again:");
+                continue;
+            }
+
+            if (!checkingShipLength(coordinatesTable, shipLengths[i])) {
+                System.out.println("Error! Wrong length of the " + shipLengths[i] + "! Try again:");
+                continue;
+            }
+
+            if (!checkingCollision(collisionBoard2, coordinatesTable)) {
+                System.out.println("Error! You placed it too close to another one. Try again:");
+                continue;
+            }
+
+            addShip(board2, coordinatesTable);
+
+            showBoard(board2);
+
+            char[][] temp = copyArrayContent(board2, collisionBoard2);
+
+            collisionBoard = addCollision(temp);
+
+            i++;
+        }
+
+        pressEnter();
+
+        char[][] game = new char[10][10];
+        char[][] game2 = new char[10][10];
+        prepareBoard(game);
+        prepareBoard(game2);
 
         int[] fieldCoordinates = new int[2];
         int availableShips = 5;
+        int availableShips2 = 5;
 
-        while(availableShips > 0) {
+        boolean player = true;
+        boolean run = true;
 
-            String field = scanner.nextLine();
-            fieldCoordinates = convertField(field);
-
-            if (fieldCoordinates[0] >= 0 && fieldCoordinates[0] <= 9 && fieldCoordinates[1] >= 0 && fieldCoordinates[1] <= 9) {
-                
-                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'X') {
-                    System.out.println("You hit a ship!");
-                    showBoard(game);
-                }
-
-                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'M') {
-                    System.out.println("You missed!");
-                    showBoard(game);
-                }
-                
-                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'O') {
-                    game[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
-                    board[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
-                    showBoard(game);
-                    
-                    if (shot(board, fieldCoordinates)) {
-                        System.out.println("You hit a ship! Try again:");
-                    } else { 
-                        System.out.println("You sank a ship! Specify a new target:");
-                        availableShips--;
+        while(run){
+            if(player){
+                while(availableShips2 != 0){
+                    showBoard(game2);
+                    System.out.println("---------------------");
+                    showBoard(board);
+                    System.out.println("Player 1, it's your turn:");
+        
+                    String field = scanner.nextLine();
+                    fieldCoordinates = convertField(field);
+        
+                    if (fieldCoordinates[0] >= 0 && fieldCoordinates[0] <= 9 && fieldCoordinates[1] >= 0 && fieldCoordinates[1] <= 9) {
+                        
+                        if (board2[fieldCoordinates[0]][fieldCoordinates[1]] == 'X') {
+                            System.out.println("You hit a ship!");
+                            player = !player;
+                            pressEnter();
+                            break;
+                        }
+        
+                        if (board2[fieldCoordinates[0]][fieldCoordinates[1]] == 'M') {
+                            System.out.println("You missed!");
+                            player = !player;
+                            pressEnter();
+                            break;
+                        }
+                        
+                        if (board2[fieldCoordinates[0]][fieldCoordinates[1]] == 'O') {
+                            game2[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
+                            board2[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
+                            
+                            if (shot(board2, fieldCoordinates)) {
+                                System.out.println("You hit a ship!");
+                                player = !player;
+                                pressEnter();
+                                break;
+                            } else {
+                                availableShips2--;
+                                if (availableShips2 == 0) {
+                                    System.out.println("You sank the last ship. You won. Congratulations!");
+                                    run = false;
+                                } else {
+                                    System.out.println("You sank a ship!");
+                                    player = !player;
+                                    pressEnter();
+                                    break;
+                                }
+                                
+                            }
+                        }
+        
+                        if (board2[fieldCoordinates[0]][fieldCoordinates[1]] == '~') {
+                            game2[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
+                            board2[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
+                            System.out.println("You missed!");
+                            player = !player;
+                            pressEnter();
+                            break;
+                        }
+                        
+                    } else {
+                        
+                        System.out.println("Error! You entered the wrong coordinates! Try again:");
+                        continue;
                     }
                 }
-
-                if (board[fieldCoordinates[0]][fieldCoordinates[1]] == '~') {
-                    game[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
-                    board[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
-                    showBoard(game);
-                    System.out.println("You missed!");
-                    showBoard(board);
-                }
-                
             } else {
-                
-                System.out.println("Error! You entered the wrong coordinates! Try again:");
-                continue;
+                while(availableShips != 0){
+                    showBoard(game);
+                    System.out.println("---------------------");
+                    showBoard(board2);
+                    System.out.println("Player 2, it's your turn:");
+        
+                    String field = scanner.nextLine();
+                    fieldCoordinates = convertField(field);
+        
+                    if (fieldCoordinates[0] >= 0 && fieldCoordinates[0] <= 9 && fieldCoordinates[1] >= 0 && fieldCoordinates[1] <= 9) {
+                        
+                        if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'X') {
+                            System.out.println("You hit a ship!");
+                            player = !player;
+                            pressEnter();
+                            break;
+                        }
+        
+                        if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'M') {
+                            System.out.println("You missed!");
+                            player = !player;
+                            pressEnter();
+                            break;
+                        }
+                        
+                        if (board[fieldCoordinates[0]][fieldCoordinates[1]] == 'O') {
+                            game[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
+                            board[fieldCoordinates[0]][fieldCoordinates[1]] = 'X';
+                            
+                            if (shot(board, fieldCoordinates)) {
+                                System.out.println("You hit a ship!");
+                                player = !player;
+                                pressEnter();
+                                break;
+                            } else {
+                                availableShips--;
+                                if (availableShips == 0) {
+                                    System.out.println("You sank the last ship. You won. Congratulations!");
+                                    run = false;
+                                } else {
+                                    System.out.println("You sank a ship!");
+                                    player = !player;
+                                    pressEnter();
+                                    break;
+                                }
+                                
+                            }
+                        }
+        
+                        if (board[fieldCoordinates[0]][fieldCoordinates[1]] == '~') {
+                            game[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
+                            board[fieldCoordinates[0]][fieldCoordinates[1]] = 'M';
+                            System.out.println("You missed!");
+                            player = !player;
+                            pressEnter();
+                            break;
+                        }
+                        
+                    } else {
+                        
+                        System.out.println("Error! You entered the wrong coordinates! Try again:");
+                        continue;
+                    }
+                }
             }
         }
-        System.out.println("You sank the last ship. You won. Congratulations!");
+    }
+
+    public static void pressEnter(){
+        
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Press Enter and pass the move to another player");
+
+        String enter = scanner.nextLine();
+        
+        while(enter != ""){
+            enter = scanner.nextLine();
+        }
+
+        System.out.println("\033[H\033[2J");
     }
 
     public static boolean shot(char[][] board, int[] coordinates) {
