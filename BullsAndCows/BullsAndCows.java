@@ -1,41 +1,32 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class BullsAndCows {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
 
-        String code = String.valueOf(9305);
-        int bulls = 0;
-        int cows = 0;
-        String userInput = scanner.nextLine();
-        String[] answer = userInput.split("");
+        int size = scanner.nextInt();
+        int maxSize = 10;
+        int newDigit;
+        String code = "";
 
-        for (int i = 0; i < answer.length; i++) {
-            int index = code.indexOf(answer[i]);
-            if (index == i) {
-                bulls++;
-            } else if (index >= 0) {
-                cows++;
+        if (size <= maxSize) {
+            newDigit = random.nextInt(9) + 1;
+            code = code + newDigit;
+            while (code.length() < size) {
+                newDigit = random.nextInt(9);
+                //code.indexOf(String.valueOf(newDigit)) != -1
+                if (code.contains(String.valueOf(newDigit))) {
+                    continue;
+                }
+                code = code + newDigit;
             }
-        }
-
-        System.out.println(grade(bulls, cows, code));
-        scanner.close();
-    }
-
-    private static String grade(int bulls, int cows, String code) {
-        String result;
-
-        if (bulls > 0 && cows > 0) {
-            result = String.format("%d bull(s) and %d cow(s)", bulls, cows);
-        } else if (bulls > 0) {
-            result = String.format("%d bull(s)", bulls);
-        } else if (cows > 0) {
-            result = String.format("%d cow(s)", cows);
+            System.out.printf("The random secret number is %s.", code);
         } else {
-            result = "None";
+            System.out.printf("Error: can't generate a secret number with a length of %d " + 
+            "because there aren't enough unique digits.", size);
         }
-
-        return String.format("Grade: %s. The secret code is %s.", result, code);
+        scanner.close();
     }
 }
