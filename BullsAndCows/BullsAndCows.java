@@ -1,4 +1,4 @@
-import java.util.Random;
+//import java.util.Random;
 import java.util.Scanner;
 
 public class BullsAndCows {
@@ -61,14 +61,14 @@ public class BullsAndCows {
     }
 
     public static String generate(int size) {
-        Random random = new Random();
+        //Random random = new Random();
         String code = "";
         int maxDigit = 9;
         int newDigit;
-        newDigit = random.nextInt(maxDigit) + 1;
+        newDigit = (int)(Math.random() * maxDigit) + 1;//random.nextInt(maxDigit) + 1;
         code += newDigit;
         while (code.length() < size) {
-            newDigit = random.nextInt(maxDigit);
+            newDigit = (int)(Math.random() * maxDigit);//random.nextInt(maxDigit)
             if (code.contains(String.valueOf(newDigit))) {
                 continue;
             }
