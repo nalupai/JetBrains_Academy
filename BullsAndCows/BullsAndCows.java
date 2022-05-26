@@ -6,19 +6,44 @@ public class BullsAndCows {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Input the length of the secret code:");
-        int size = scanner.nextInt();
+        String setSize = scanner.next();
+        int size = 0;
+        try {
+            size = Integer.parseInt(setSize);
+        } catch (Exception e) {
+            System.out.printf("Error: %s isn't a valid number.\n", setSize);
+            java.lang.System.exit(0);
+        }
+
         int maxSize = 36;
         int maxSizeForNumbers = 10;
 
-        while(!(size <= maxSize)) {
-            System.out.printf("Error: can't generate a secret number with a length of %d " + 
+        if (size > maxSize) {
+            System.out.printf("Error: can't generate a secret number with a length of %d " +
                     "because there aren't enough unique digits.\n", size);
-            System.out.println("Please, enter the secret code's length:");
-            size = scanner.nextInt();
+            java.lang.System.exit(0);
         }
 
         System.out.println("Input the number of possible symbols in the code:");
-        int possibleSymbols = scanner.nextInt();
+
+        String setPossibleSymbols = scanner.next();
+        int possibleSymbols = 0;
+        try {
+            possibleSymbols = Integer.parseInt(setPossibleSymbols);
+        } catch (Exception e) {
+            System.out.printf("Error: %s isn't a valid number.\n", setPossibleSymbols);
+            java.lang.System.exit(0);
+        }
+
+        if (possibleSymbols > maxSize) {
+            System.out.printf("Error: maximum number of possible symbols in the code is %d (0-9, a-z).\n", maxSize);
+            java.lang.System.exit(0);
+        }
+
+        if (size > possibleSymbols || size < 1) {
+            System.out.printf("Error: it's not possible to generate a code with a length of %d with %d unique symbols.\n", size, possibleSymbols);
+            java.lang.System.exit(0);
+        }
 
         char[] symbols = {'0','1','2','3','4','5','6','7','8','9',
                 'a','b','c','d','e','f','g', 'h','i','j','k','l','m','n',
@@ -32,10 +57,10 @@ public class BullsAndCows {
         }
 
         if (possibleSymbols <= maxSizeForNumbers) {
-            code = generate(size, maxSizeForNumbers - 1);
+            code = generateNumericCode(size, maxSizeForNumbers - 1);
             System.out.println("The secret code is prepared: " + stars + " (0-" + symbols[possibleSymbols - 1] + ")");
         } else {
-            code = secretCode(size, possibleSymbols, symbols);
+            code = generateComplexCode(size, possibleSymbols, symbols);
             System.out.println("The secret code is prepared: " + stars + " (0-9, a-" + symbols[possibleSymbols - 1] + ")");
         }
 
@@ -70,7 +95,7 @@ public class BullsAndCows {
         scanner.close();
     }
 
-    public static String secretCode(int size, int possibleElements, char[] elements) {
+    public static String generateComplexCode(int size, int possibleElements, char[] elements) {
         String code = "";
 
         char[] temp = new char[possibleElements];
@@ -121,7 +146,7 @@ public class BullsAndCows {
         return indexes;
     }
 
-    public static String generate(int size, int maxDigit) {
+    public static String generateNumericCode(int size, int maxDigit) {
         Random random = new Random();
         String code = "";
         int newDigit;
